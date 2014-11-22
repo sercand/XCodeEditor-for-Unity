@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
-using Json = MiniJSON;
+using Json = XMiniJSON;
 
 namespace UnityEditor.XCodeEditor 
 {
@@ -80,8 +80,11 @@ namespace UnityEditor.XCodeEditor
 				return (ArrayList)_datastore["excludes"];
 			}
 		}
-		
-		public XCMod( string filename )
+
+	    public XCMod(string filename)
+	        : this(System.IO.Path.GetDirectoryName(filename), filename) { }
+
+	    public XCMod(string projectPath, string filename)
 		{	
 			FileInfo projectFileInfo = new FileInfo( filename );
 			if( !projectFileInfo.Exists ) {
@@ -89,8 +92,7 @@ namespace UnityEditor.XCodeEditor
 			}
 			
 			name = System.IO.Path.GetFileNameWithoutExtension( filename );
-			path = System.IO.Path.GetDirectoryName( filename );
-			
+            path = projectPath;
 			string contents = projectFileInfo.OpenText().ReadToEnd();
 			_datastore = (Hashtable)XMiniJSON.jsonDecode( contents );
 			

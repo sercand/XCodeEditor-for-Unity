@@ -923,8 +923,14 @@ namespace UnityEditor.XCodeEditor
 			XCMod mod = new XCMod( pbxmod );
 			ApplyMod( mod );
 		}
-		
-		public void ApplyMod( XCMod mod )
+
+	    public void ApplyMod(string rootPath, string pbxmod)
+	    {
+	        XCMod mod = new XCMod(rootPath, pbxmod);
+	        ApplyMod(mod);
+	    }
+
+	    public void ApplyMod( XCMod mod )
 		{	
 			PBXGroup modGroup = this.GetGroup( mod.group );
 			
