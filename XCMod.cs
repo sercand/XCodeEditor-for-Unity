@@ -126,15 +126,22 @@ namespace UnityEditor.XCodeEditor
 	{
 		public string filePath { get; private set; }
 		public bool isWeak { get; private set; }
+		public string sourceTree {get; private set;}
 		
 		public XCModFile( string inputString )
 		{
 			isWeak = false;
-			
+			sourceTree = "SDKROOT";
 			if( inputString.Contains( ":" ) ) {
 				string[] parts = inputString.Split( ':' );
 				filePath = parts[0];
-				isWeak = ( parts[1].CompareTo( "weak" ) == 0 );	
+				isWeak = System.Array.IndexOf(parts, "weak", 1) > 0;
+				
+				if(System.Array.IndexOf(parts, "<group>", 1) > 0)
+					sourceTree = "GROUP";
+				else
+					sourceTree = "SDKROOT";
+				
 			}
 			else {
 				filePath = inputString;

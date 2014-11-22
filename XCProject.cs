@@ -937,7 +937,14 @@ namespace UnityEditor.XCodeEditor
 			Debug.Log( "Adding libraries..." );
 			PBXGroup librariesGroup = this.GetGroup( "Libraries" );
 			foreach( XCModFile libRef in mod.libs ) {
-				string completeLibPath = System.IO.Path.Combine( "usr/lib", libRef.filePath );
+
+				string completeLibPath;
+				if(libRef.sourceTree.Equals("SDKROOT")) {
+					completeLibPath = System.IO.Path.Combine( "usr/lib", libRef.filePath );
+				}
+				else {
+					completeLibPath = System.IO.Path.Combine( mod.path, libRef.filePath );
+				}
 				this.AddFile( completeLibPath, modGroup, "SDKROOT", true, libRef.isWeak );
 			}
 			
