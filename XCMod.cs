@@ -1,22 +1,15 @@
 using UnityEngine;
+using Facebook.MiniJSON;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using Json = XMiniJSON;
 
 namespace UnityEditor.XCodeEditor 
 {
 	public class XCMod 
 	{
-//		private string group;
-//		private ArrayList patches;
-//		private ArrayList libs;
-//		private ArrayList frameworks;
-//		private ArrayList headerpaths;
-//		private ArrayList files;
-//		private ArrayList folders;
-//		private ArrayList excludes;
 		private Hashtable _datastore;
-		private ArrayList _libs;
+		private List<object> _libs;
 		
 		public string name { get; private set; }
 		public string path { get; private set; }
@@ -27,17 +20,21 @@ namespace UnityEditor.XCodeEditor
 			}
 		}
 		
-		public ArrayList patches {
+		public List<object> patches
+		{
 			get {
-				return (ArrayList)_datastore["patches"];
+				return (List<object>)_datastore["patches"];
 			}
 		}
 		
-		public ArrayList libs {
+		public List<object> libs {
 			get {
 				if( _libs == null ) {
-					_libs = new ArrayList( ((ArrayList)_datastore["libs"]).Count );
-					foreach( string fileRef in (ArrayList)_datastore["libs"] ) {
+					List<object> libsCast = (List<object>)_datastore["libs"];
+					int count = libsCast.Count;
+					
+					_libs = new List<object>( count );
+					foreach( string fileRef in libsCast ) {
 						_libs.Add( new XCModFile( fileRef ) );
 					}
 				}
@@ -45,46 +42,49 @@ namespace UnityEditor.XCodeEditor
 			}
 		}
 		
-		public ArrayList frameworks {
+		public List<object> librarysearchpaths {
 			get {
-				return (ArrayList)_datastore["frameworks"];
+				return (List<object>)_datastore["librarysearchpaths"];
 			}
 		}
 		
-		public ArrayList headerpaths {
+		public List<object> frameworks {
 			get {
-				return (ArrayList)_datastore["headerpaths"];
-			}
-		}
-
-		public Hashtable buildSettings {
-			get {
-				return (Hashtable)_datastore["buildSettings"];
+				return (List<object>)_datastore["frameworks"];
 			}
 		}
 		
-		public ArrayList files {
+		public List<object> frameworksearchpath {
 			get {
-				return (ArrayList)_datastore["files"];
+				return (List<object>)_datastore["frameworksearchpaths"];
 			}
 		}
 		
-		public ArrayList folders {
+		public List<object> headerpaths {
 			get {
-				return (ArrayList)_datastore["folders"];
+				return (List<object>)_datastore["headerpaths"];
 			}
 		}
 		
-		public ArrayList excludes {
+		public List<object> files {
 			get {
-				return (ArrayList)_datastore["excludes"];
+				return (List<object>)_datastore["files"];
 			}
 		}
-
-	    public XCMod(string filename)
-	        : this(System.IO.Path.GetDirectoryName(filename), filename) { }
-
-	    public XCMod(string projectPath, string filename)
+		
+		public List<object> folders {
+			get {
+				return (List<object>)_datastore["folders"];
+			}
+		}
+		
+		public List<object> excludes {
+			get {
+				return (List<object>)_datastore["excludes"];
+			}
+		}
+		
+		public XCMod( string projectPath, string filename )
 		{	
 			FileInfo projectFileInfo = new FileInfo( filename );
 			if( !projectFileInfo.Exists ) {
@@ -92,33 +92,16 @@ namespace UnityEditor.XCodeEditor
 			}
 			
 			name = System.IO.Path.GetFileNameWithoutExtension( filename );
-            path = projectPath;
-			string contents = projectFileInfo.OpenText().ReadToEnd();
-			_datastore = (Hashtable)XMiniJSON.jsonDecode( contents );
+			path = projectPath;//System.IO.Path.GetDirectoryName( filename );
 			
-//			group = (string)_datastore["group"];
-//			patches = (ArrayList)_datastore["patches"];
-//			libs = (ArrayList)_datastore["libs"];
-//			frameworks = (ArrayList)_datastore["frameworks"];
-//			headerpaths = (ArrayList)_datastore["headerpaths"];
-//			files = (ArrayList)_datastore["files"];
-//			folders = (ArrayList)_datastore["folders"];
-//			excludes = (ArrayList)_datastore["excludes"];
+			string contents = projectFileInfo.OpenText().ReadToEnd();
+			Dictionary<string, object> dictJson = Json.Deserialize(contents) as Dictionary<string,object>;;
+			_datastore = new Hashtable(dictJson);
+			
+			
 		}
 		
-			
-//	"group": "GameCenter",
-//	"patches": [],
-//	"libs": [],
-//	"frameworks": ["GameKit.framework"],
-//	"headerpaths": ["Editor/iOS/GameCenter/**"],					
-//	"files":   ["Editor/iOS/GameCenter/GameCenterBinding.m",
-//				"Editor/iOS/GameCenter/GameCenterController.h",
-//				"Editor/iOS/GameCenter/GameCenterController.mm",
-//				"Editor/iOS/GameCenter/GameCenterManager.h",
-//				"Editor/iOS/GameCenter/GameCenterManager.m"],
-//	"folders": [],	
-//	"excludes": ["^.*\\.meta$", "^.*\\.mdown^", "^.*\\.pdf$"]
+		
 		
 	}
 	
