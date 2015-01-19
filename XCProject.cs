@@ -513,10 +513,15 @@ namespace UnityEditor.XCodeEditor
 				this.AddFile( absoluteFilePath, modGroup );
 			}
 
-			foreach( string folderPath in mod.folders ) {
-				string absoluteFolderPath = AddXcodeQuotes(System.IO.Path.Combine( mod.path, folderPath ));
-				this.AddFolder( absoluteFolderPath, modGroup, (string[])mod.excludes.ToArray(  ) );
-			}
+			foreach (string folderPath in mod.folders) {
+								string absoluteFolderPath = AddXcodeQuotes (System.IO.Path.Combine (mod.path, folderPath));
+								var exc = mod.excludes;
+								string[] arr = new string[exc.Count];
+								for (int i = 0; i < arr.Length; i++) {
+										arr [i] = exc [i].ToString ();
+								}
+								this.AddFolder (absoluteFolderPath, modGroup, arr);
+						}
 
 
 			foreach( string headerpath in mod.headerpaths ) {
