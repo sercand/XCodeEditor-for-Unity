@@ -65,8 +65,19 @@ namespace UnityEditor.XCodeEditor
 				return (List<object>)_datastore["headerpaths"];
 			}
 		}
-		
-		public List<object> files {
+
+	    public Hashtable buildSettings
+	    {
+	        get
+	        {
+	            if (_datastore.ContainsKey("buildSettings"))
+	                return (Hashtable) _datastore["buildSettings"];
+	            else
+	                return null;
+	        }
+	    }
+
+	    public List<object> files {
 			get {
 				return (List<object>)_datastore["files"];
 			}

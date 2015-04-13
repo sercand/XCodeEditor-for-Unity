@@ -34,19 +34,20 @@ namespace UnityEditor.XCodeEditor
         private char[] data;
         private int index;
         private int indent;
-    
-        public PBXDictionary Decode( string data )
+
+        public PBXDictionary Decode(string data)
         {
-            if( !data.StartsWith( PBX_HEADER_TOKEN ) ) {
-                Debug.Log( "Wrong file format." );
+            if (!data.StartsWith(PBX_HEADER_TOKEN))
+            {
+                Debug.Log("Wrong file format.");
                 return null;
             }
 
-            data = data.Substring( 13 );
+            data = data.Substring(13);
             this.data = data.ToCharArray();
             index = 0;
-            
-            return (PBXDictionary)ParseValue();
+
+            return (PBXDictionary) ParseValue();
         }
 
         public string Encode( PBXDictionary pbxData)
@@ -313,16 +314,16 @@ namespace UnityEditor.XCodeEditor
 
         #endregion
         #region Serialize
-        
+
         private void AppendNewline(StringBuilder builder)
         {
             builder.Append(WHITESPACE_NEWLINE);
-            for(int i=0; i<indent; i++)
+            for (int i = 0; i < indent; i++)
             {
-                builder.Append (WHITESPACE_TAB);
+                builder.Append(WHITESPACE_TAB);
             }
         }
-        
+
         private void AppendLineDelim(StringBuilder builder, bool newline)
         {
             if(newline)

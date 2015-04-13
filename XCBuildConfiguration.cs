@@ -10,6 +10,7 @@ namespace UnityEditor.XCodeEditor
 		protected const string LIBRARY_SEARCH_PATHS_KEY = "LIBRARY_SEARCH_PATHS";
 		protected const string FRAMEWORK_SEARCH_PATHS_KEY = "FRAMEWORK_SEARCH_PATHS";
 		protected const string OTHER_C_FLAGS_KEY = "OTHER_CFLAGS";
+        protected const string OTHER_LD_FLAGS_KEY = "OTHER_LDFLAGS";
 		
 		public XCBuildConfiguration( string guid, PBXDictionary dictionary ) : base( guid, dictionary )
 		{
@@ -113,6 +114,54 @@ namespace UnityEditor.XCodeEditor
 			
 			return modified;
 		}
-		
+        public bool AddOtherLDFlags(string flag)
+        {
+            //Debug.Log( "INIZIO A" );
+            PBXList flags = new PBXList();
+            flags.Add(flag);
+            return AddOtherLDFlags(flags);
+        }
+
+        public bool AddOtherLDFlags(PBXList flags)
+        {
+            //Debug.Log( "INIZIO B" );
+
+            bool modified = false;
+
+            if (!ContainsKey(BUILDSETTINGS_KEY))
+                this.Add(BUILDSETTINGS_KEY, new PBXDictionary());
+
+            foreach (string flag in flags)
+            {
+
+                if (!((PBXDictionary)_data[BUILDSETTINGS_KEY]).ContainsKey(OTHER_LD_FLAGS_KEY))
+                {
+                    ((PBXDictionary)_data[BUILDSETTINGS_KEY]).Add(OTHER_LD_FLAGS_KEY, new PBXList());
+                }
+                else if (((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY] is string)
+                {
+                    string tempString = (string)((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY];
+                    ((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY] = new PBXList();
+                    ((PBXList)((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY]).Add(tempString);
+                }
+
+                if (!((PBXList)((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY]).Contains(flag))
+                {
+                    ((PBXList)((PBXDictionary)_data[BUILDSETTINGS_KEY])[OTHER_LD_FLAGS_KEY]).Add(flag);
+                    modified = true;
+                }
+            }
+
+            return modified;
+        }
+
+	    public bool UpdateKey(string key, string value)
+	    {
+            if (!ContainsKey(BUILDSETTINGS_KEY))
+                this.Add(BUILDSETTINGS_KEY, new PBXDictionary());
+
+            ((PBXDictionary)_data[BUILDSETTINGS_KEY])[key] = value;
+            return true;   
+	    }
 	}
 }
