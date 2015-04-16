@@ -664,7 +664,7 @@ namespace UnityEditor.XCodeEditor
                 {
                     if (buildSettings.ContainsKey(s))
                     {
-                        this.UpdateBuildKey(s, (string) buildSettings["GCC_ENABLE_CPP_EXCEPTIONS"]);
+                        this.UpdateBuildKey(s, (string) buildSettings[s]);
                     }
                 }
             }
