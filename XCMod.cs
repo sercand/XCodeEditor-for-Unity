@@ -66,12 +66,14 @@ namespace UnityEditor.XCodeEditor
 			}
 		}
 
-	    public Hashtable buildSettings
+	    public Dictionary<string,object> buildSettings
 	    {
 	        get
 	        {
 	            if (_datastore.ContainsKey("buildSettings"))
-	                return (Hashtable) _datastore["buildSettings"];
+	            {
+                    return (Dictionary<string, object>)_datastore["buildSettings"];
+	            }
 	            else
 	                return null;
 	        }

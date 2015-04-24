@@ -10,7 +10,11 @@ namespace UnityEditor.XCodeEditor
 {
     public class PBXParser
     {
+#if UNITY_EDITOR_WIN
+        public const string PBX_HEADER_TOKEN = "// !$*UTF8*$!\r\n";
+#else
         public const string PBX_HEADER_TOKEN = "// !$*UTF8*$!\n";
+#endif
         public const char WHITESPACE_SPACE = ' ';
         public const char WHITESPACE_TAB = '\t';
         public const char WHITESPACE_NEWLINE = '\n';

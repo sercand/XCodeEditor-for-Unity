@@ -629,7 +629,7 @@ namespace UnityEditor.XCodeEditor
                 }
             }
 
-            Hashtable buildSettings = mod.buildSettings;
+            var buildSettings = mod.buildSettings;
             if (buildSettings != null)
             {
                 if (buildSettings.ContainsKey("OTHER_LDFLAGS"))
