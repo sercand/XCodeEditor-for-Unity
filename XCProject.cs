@@ -292,7 +292,7 @@ namespace UnityEditor.XCodeEditor
         {
             foreach (KeyValuePair<string, XCBuildConfiguration> buildConfig in buildConfigurations)
             {
-                modified = modified || buildConfig.Value.UpdateKey(key, value);
+                modified = buildConfig.Value.UpdateKey(key, value) || modified;
             }
             return modified;
         }
@@ -657,14 +657,11 @@ namespace UnityEditor.XCodeEditor
                     }
                 }
 
-                var looking = new[]
-                {"GCC_ENABLE_CPP_EXCEPTIONS", "GCC_ENABLE_OBJC_EXCEPTIONS", "DEBUG_INFORMATION_FORMAT"};
-
-                foreach (var s in looking)
+                foreach (var setting in buildSettings)
                 {
-                    if (buildSettings.ContainsKey(s))
+                    if (setting.Key != "OTHER_LDFLAGS" && setting.Key != "OTHER_CFLAGS")
                     {
-                        this.UpdateBuildKey(s, (string) buildSettings[s]);
+                        this.UpdateBuildKey(setting.Key, (string) setting.Value);
                     }
                 }
             }
